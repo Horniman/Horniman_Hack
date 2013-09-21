@@ -1,5 +1,6 @@
 """Settings"""
 from __future__ import division, absolute_import, print_function, unicode_literals
+import sys
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -9,6 +10,7 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
+
 
 DATABASES = {
     'default': {
@@ -21,6 +23,11 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default.
     }
 }
+if 'test' in sys.argv:
+    DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3'}
+
+if 'test_coverage' in sys.argv:
+    DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3'}
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
@@ -124,6 +131,8 @@ INSTALLED_APPS = (
     'db',
     'django_coverage',
     'satalite',
+    'acl',
+    'llap',
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
