@@ -1,17 +1,20 @@
+"""
+Generic tables
+"""
+from __future__ import division, absolute_import, print_function, unicode_literals
+
 from django.db import models
 
-# Create your models here.
-
 class Tank(models.Model):
-    name = models.CharField()
-
-class Profile(models.Model):
-    tank = models.ForeignKey(Tank)
+    """Seperate control zones"""
+    name = models.CharField(max_length=255)
 
 class Sensor(models.Model):
-    name = models.CharField()
+    """Each data source"""
+    name = models.CharField(max_length=255)
 
 class SensorTempBuoy(models.Model):
+    """Calibration and validtion data for check data from Buoy based temperiture sensors"""
     sensor = models.ForeignKey(Sensor)
     target_lat = models.FloatField()
     target_lon = models.FloatField()
@@ -20,68 +23,70 @@ class SensorTempBuoy(models.Model):
     min_temp = models.FloatField()
     #TODO: Cal and val data
 
+class SensorLuxScrape(models.Model):
+    """Settings to screap Lux values for"""
+    sensor = models.ForeignKey(Sensor)
+    target_lat = models.FloatField()
+    target_lon = models.FloatField()
+
 class SensorTempTank(models.Model):
+    """Calibration and validation for tank based temperiture sensors."""
     sensor = models.ForeignKey(Sensor)
     max_temp = models.FloatField()
     min_temp = models.FloatField()
 
 class SensorTempAmbiant(models.Model):
+    """Calibration and validation for other temperiture sensors."""
     sensor = models.ForeignKey(Sensor)
     max_temp = models.FloatField()
     min_temp = models.FloatField()
 
 class SensorLux(models.Model):
+    """Calibration and validation for light sensors."""
     sensor = models.ForeignKey(Sensor)
     max_lux = models.FloatField()
     min_lux = models.FloatField()
 
 class Temp(models.Model):
+    """Log of valid temperature readings"""
     sensor = models.ForeignKey(Sensor)
-    temp = models.FloatField() 
-    time = models.DateTime()
+    temp = models.FloatField()
+    time = models.DateTimeField()
 
 class Lux(models.Model):
+    """Log of valid light readings"""
     sensor = models.ForeignKey(Sensor)
-    lux = models.FloatField(Sensor) 
-    time = models.DateTime()
+    lux = models.FloatField(Sensor)
+    time = models.DateTimeField()
     
-class LogSatalite(models.Model):
-    sensor = models.ForeignKey(Sensor)
-    byyy = models.CharField(maxlength=4)
-    bm =models.CharField(maxlength=2)
-    bd =models.CharField(maxlength=2)
-    bh =models.CharField(maxlength=2)
-    eyyy = models.CharField(maxlength=4)
-    em =models.CharField(maxlength=2)
-    ed=models.CharField(maxlength=2)
-    eh=models.CharField(maxlength=2)
-    sst=models.FloatField()
-    sstanom=models.FloatField()
-    hotspot=models.FloatField()
-    dhw=models.FloatField()
-    lat=models.FloatField()
-    long=models.FloatField()
-
 class Profile(models.Model):
-    tank = models.ForeignField(Tank)    
-    time = models.DateTime()
+    """The model temperitrue and lux that each tank is following"""
+    tank = models.ForeignKey(Tank)
+    time = models.DateTimeField()
     temp = models.FloatField()
     lux = models.FloatField()
 
 class TankTempParams(models.Model):
-    tank = models.ForeignField(Tank)    
-    sensor = models.ForeignField(Sensor)
+    """Parameters to build the Profile model for each tank"""
+    tank = models.ForeignKey(Tank)
+    sensor = models.ForeignKey(Sensor)
     time_offset = models.FloatField()
     value_offset = models.FloatField()
-    start_time = models.DateTime()
-    end_time = models.DateTime()
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
 
 class TankLuxParams(models.Model):
-    tank = models.ForeignField(Tank)    
-    sensor = models.ForeignField(Sensor)
+    """Parameters to build the light model for each Profile"""
+    tank = models.ForeignKey(Tank)
+    sensor = models.ForeignKey(Sensor)
     time_offset = models.FloatField()
     value_offset = models.FloatField()
-    start_time = models.DateTime()
-    end_time = models.DateTime()
-        
-    
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+
+class Moonlight(models.Model):
+    """Moonline observations"""
+    sensor = models.ForeignKey(Sensor)
+    rise = models.DateTimeField()
+    set = models.TimeField()
+    percent = models.FloatField()

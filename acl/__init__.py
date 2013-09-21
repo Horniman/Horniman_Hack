@@ -1,9 +1,9 @@
 """
-Database
-========
+ACL
+===
 
 :mod:`models` Module
 --------------------
 
-.. automodule:: db.models
+.. automodule:: acl.models
 """
