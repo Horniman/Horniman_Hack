@@ -16,8 +16,9 @@
       <h1><?php print $page_title; ?></h1>
 
       <ul class="inline-list">
+        <li><?php print l('Dashboard', ''); ?></li>
         <?php if ($logged_in): ?>
-          <li><a href="/user/logout">Logout</a></li>
+          <li><?php print l('Logout', 'user/logout'); ?></li>
         <?php endif; ?>
       </ul>
     </div>
