@@ -14,6 +14,12 @@
   <div class="row">
     <div class="large-12 columns">
       <h1><?php print $page_title; ?></h1>
+
+      <ul class="inline-list">
+        <?php if ($logged_in): ?>
+          <li><a href="/user/logout">Logout</a></li>
+        <?php endif; ?>
+      </ul>
     </div>
   </div>
 
