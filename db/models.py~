@@ -73,7 +73,7 @@ class TankTempParams(models.Model):
     """Parameters to build the Profile model for each tank"""
     tank = models.ForeignKey(Tank)
     sensor = models.ForeignKey(Sensor)
-    time_offset_seconds = models.IntegerField()
+    time_offset = models.FloatField()
     value_offset = models.FloatField()
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
@@ -82,7 +82,7 @@ class TankLuxParams(models.Model):
     """Parameters to build the light model for each Profile"""
     tank = models.ForeignKey(Tank)
     sensor = models.ForeignKey(Sensor)
-    time_offset_seconds = models.IntegerField()
+    time_offset = models.FloatField()
     value_offset = models.FloatField()
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
