@@ -7,17 +7,13 @@ from timedate import timedelta
 
 def SetProfileTable(ForDay, ForTank)
 
-   TempParamSets = TankTempParams.objects.get(tank=ForTank)
+   ParamSets = TankTempParams.objects.get(tank=ForTank)
 
-   TempParamSet = TempParamSets.objets.get(start_time__gte = ForDay, end_time__lte = ForDay)
-   if len(TempParamSet) <> 1:
-      
-   LuxParamSets = TankLuxParams.objects.get(tank=ForTank)
-   
-   LuxParamSet = LuxParamSets.objets.get(start_time__gte = ForDay, end_time__lte = ForDay)
-      TempTimeOffset=TempParamSet[0].time_offset_seconds
+   ParamSet = ParamSets.objets.get(start_time__gte = ForDay, end_time__lte = ForDay)
+   if len(ParamSet) == 1:
+      TimeOffset=
       for TimePeriod in range(0,23):
-         StartTime = ForDay.replace(hour=TimePeriod) - timedelta(seconds=TempTimeOffset)
+         StartTime = ForDay.replace(hour=TimePeriod) - timedelta(seconds=TimeOffset)
          EndTime = ForDay.replace(hour=TimePeriod,minute=59)
 
          TempReadings = Temp.objects.get(time__gte=StartTime time__lte=EndTime)
@@ -26,8 +22,7 @@ def SetProfileTable(ForDay, ForTank)
          for Reading in TempReadings:
             SumTemp=+ Reading.temp
             NumReadings=+1
-         AveTemp[TimePeriod] = SumTemp/NumReadings
-   
+         AveTemp = SumTemp/NumReadings
          
          LuxReadings = Lux.objects.get(time__gte=StartTime time__lte=EndTime)
          SumLux=0
@@ -35,7 +30,7 @@ def SetProfileTable(ForDay, ForTank)
          for Reading in LuxReadings:
             SumLux=+ Reading.Lux
             NumReadings=+1
-         AveLux[TimePeriod] = SumLux/NumReadings
+         AveLux = SumLux/NumReadings
          
          ProfileTargetEntry = Profile(tank=ForTank, time=ForDay.replace(hour=TimePeriod), temp=AveTemp lux=AveLux)
          ProfileTargetEntry.save()
