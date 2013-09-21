@@ -74,6 +74,7 @@ function leak_execute() {
       echo leak_template('html', $vars);
       break;
     case 'json':
+      header('Content-Type: application/json');
       if (is_array($vars['content'])) {
         echo json_encode($vars['content']);
       }
