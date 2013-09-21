@@ -99,22 +99,19 @@ function leak_debug($name, $var) {
 function leak_get_debug_output() {
   global $debug;
   $vars = array('debug' => print_r($debug, TRUE));
-  return leak_template('debug', $vars, 'system');
+  return leak_template('debug', $vars, 'templates/system');
 }
 
 /**
  * Convert some variables to rendered output
  */
-function leak_template($template_name, $variables, $folder = '') {
+function leak_template($template_name, $variables, $folder = 'templates') {
   extract($variables, EXTR_SKIP);
   // Start output buffering
   ob_start();
-  // If a subfolder name is provided add it to the template name
-  if (!empty($folder)) {
-    $template_name  = $folder . '/' . $template_name;
-  }
+
   // Include the template file
-  include 'templates/' . $template_name . '.tpl.php';
+  include $folder . '/' . $template_name . '.tpl.php';
   // End buffering and return its contents
   return ob_get_clean();
 }
@@ -137,7 +134,7 @@ function leak_access_denied() {
   $output = array('page_title' => 'Access Denied');
   global $user;
   if (empty($user['id'])) {
-    $output['content'] = leak_template('login', array(), 'system');
+    $output['content'] = leak_template('login', array(), 'templates/system');
   }
   else {
     $output['content'] = 'You do not have access to this page';
