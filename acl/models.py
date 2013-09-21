@@ -17,3 +17,16 @@ class User(models.Model):
 class UserRoles(model.Model):
     user = models.ForiegnKey(User)
     rid = models.IntField()
+
+class Observations(model.Model):
+    user = models.ForiegnKey(User)
+    subject = models.CharField(max_length=255)
+    text = models.TextField()
+    time = models.DateTimeField()
+    reminder = models.DateTimeField()
+        
+class ObservationImages(model.Model):
+    observation = models.ForiegnKey(Observations)
+    subject = models.CharField(max_length=255)
+    text = models.TextField()
+    file = models.FileField()
