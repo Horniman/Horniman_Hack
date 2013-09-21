@@ -1,5 +1,9 @@
 ls *.pub | while read acct
 do
-  useradd $(echo $acct | sed 's/.pub//')
-    cat $acct > /home/$(echo $acct | sed 's/.pub//')/.ssh/authorized_keys
-    done
+  id=$(echo $acct | sed 's/.pub//')
+  useradd -d /home/$id $id
+  mkdir -p /home/$id/.ssh
+  chown -R $id /home/$id
+  chmod 600 /home/$id/.ssh/authorized_keys
+  cat $acct > /home/$id/.ssh/authorized_keys
+done
