@@ -14,7 +14,7 @@ class Sensor(models.Model):
     name = models.CharField(max_length=255)
 
 class SensorTempBuoy(models.Model):
-    """Calibration and validtion data for check data from Buoy based temperiture sensors"""
+    """Calibration and validation data for check data from Buoy based temperature sensors"""
     sensor = models.ForeignKey(Sensor)
     target_lat = models.FloatField()
     target_lon = models.FloatField()
@@ -23,15 +23,21 @@ class SensorTempBuoy(models.Model):
     min_temp = models.FloatField()
     #TODO: Cal and val data
 
+class SensorLuxScrape(models.Model):
+    """Settings to scrape Lux values for"""
+    sensor = models.ForeignKey(Sensor)
+    target_lat = models.FloatField()
+    target_lon = models.FloatField()
+
 class SensorTempTank(models.Model):
-    """Calibration and validation for tank based temperiture sensors."""
+    """Calibration and validation for tank based temperature sensors."""
     sensor = models.ForeignKey(Sensor)
     llap = models.CharField(max_length=2)
     max_temp = models.FloatField()
     min_temp = models.FloatField()
 
-class SensorTempAmbiant(models.Model):
-    """Calibration and validation for other temperiture sensors."""
+class SensorTempAmbient(models.Model):
+    """Calibration and validation for other temperature sensors."""
     sensor = models.ForeignKey(Sensor)
     llap = models.CharField(max_length=2)
     max_temp = models.FloatField()
@@ -57,7 +63,7 @@ class Lux(models.Model):
     time = models.DateTimeField()
     
 class Profile(models.Model):
-    """The model temperitrue and lux that each tank is following"""
+    """The model temperature and lux that each tank is following"""
     tank = models.ForeignKey(Tank)
     time = models.DateTimeField()
     temp = models.FloatField()
@@ -83,6 +89,7 @@ class TankLuxParams(models.Model):
 
 class Moonlight(models.Model):
     """Moonline observations"""
+    sensor = models.ForeignKey(Sensor)
     rise = models.DateTimeField()
     set = models.TimeField()
     percent = models.FloatField()
