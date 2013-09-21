@@ -1,5 +1,7 @@
 <?php
 
+print_r($_REQUEST);
+
 // Pull in shared code
 require '../app/core.php';
 
