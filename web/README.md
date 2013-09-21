@@ -30,11 +30,11 @@ Then install nginx and PHP-FPM:
     sudo apt-get install nginx php5-fpm
 
 Then edit the Nginx configuration file found at
-`/etc/nginx/sites-enabled/default`
+/etc/nginx/sites-enabled/default
 so it looks something like this:
 
     server {
-      root /vagrant/build/Horniman_Hack/web/public_html;
+      root /vagrant/Horniman_Hack/web/public_html;
       index index.php;
       server_name localhost;
       location / {
@@ -48,6 +48,9 @@ so it looks something like this:
       }
     }
 
+The folder in which you launched the virtual machine is mounted within the
+vm at /vagrant so that you can point Nginx at the web codebase within the repo.
+
 You might need to change the root location depending on where you have git
 cloned the code base.`
 Then just start or restart the services:
@@ -58,8 +61,13 @@ Then just start or restart the services:
 
 Done!
 
+When you've finished developing you can either halt or destroy the machine:
 
+    vagrant halt
 
+or
+
+    vagrant destroy
 
 
 
