@@ -23,6 +23,12 @@ class SensorTempBuoy(models.Model):
     min_temp = models.FloatField()
     #TODO: Cal and val data
 
+class SensorLuxScrape(models.Model):
+    """Settings to screap Lux values for"""
+    sensor = models.ForeignKey(Sensor)
+    target_lat = models.FloatField()
+    target_lon = models.FloatField()
+
 class SensorTempTank(models.Model):
     """Calibration and validation for tank based temperiture sensors."""
     sensor = models.ForeignKey(Sensor)
@@ -80,6 +86,7 @@ class TankLuxParams(models.Model):
 
 class Moonlight(models.Model):
     """Moonline observations"""
+    sensor = models.ForeignKey(Sensor)
     rise = models.DateTimeField()
     set = models.TimeField()
     percent = models.FloatField()
