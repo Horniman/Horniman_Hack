@@ -42,6 +42,9 @@ function leak_parse_request() {
   else {
     $request['controller'] = $path[1];
   }
+  if (!in_array($request['controller'], $config['controllers'])) {
+    die('Unknown controller');
+  }
 
   if (empty($path[2])) {
     $request['op'] = $config['default_op'];

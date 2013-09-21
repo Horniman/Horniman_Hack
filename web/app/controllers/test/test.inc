@@ -5,5 +5,5 @@ function test_access($user) {
 }
 
 function test_show_execute() {
-  return array('content' => 'This is just a test callback.');
+  return array('content' => 'It works!');
 }

@@ -42,7 +42,7 @@ def SetProfileTable(ForDay, ForTank):
          NumReadings=+1
       AveLux[TimePeriod] = SumLux/NumReadings
       
-      ProfileTargetEntry = Profile(tank=ForTank, time=ForDay.replace(hour=TimePeriod), temp=AveTemp, lux=AveLux)
+      ProfileTargetEntry = Profile(tank=ForTank, time=ForDay.replace(hour=TimePeriod), temp=AveTemp lux=AveLux)
       ProfileTargetEntry.save()
 
 

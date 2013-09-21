@@ -9,7 +9,7 @@
 /**
  * Bootstrap the system
  */
-function leak_bootstrap() {
+function coral_bootstrap() {
   chdir(dirname(realpath(__FILE__)));
   global $config, $request, $db, $user;
 
@@ -30,7 +30,7 @@ function leak_bootstrap() {
   $user = leak_active_user();
   leak_debug('user', $user);
 
-  // TODO: check controller and op are in the allowed values
+  require 'system/request.inc';
   $request = leak_parse_request();
   leak_debug('request', $request);
 
@@ -40,10 +40,10 @@ function leak_bootstrap() {
 /**
  * Execute the current request
  */
-function leak_execute() {
+function coral_execute() {
   global $request, $user, $config;
 
-  require_once "{$request['controller']}/{$request['controller']}.inc";
+  require_once "controllers/{$request['controller']}/{$request['controller']}.inc";
   $access_callback = "{$request['controller']}_access";
   if (function_exists($access_callback) && $access_callback($user)) {
     $callback = "{$request['controller']}_{$request['op']}_execute";
@@ -51,7 +51,8 @@ function leak_execute() {
       $vars = $callback();
 
       // Setup some common page variables
-      $vars['page_title'] = 'LEAK';
+      $vars['page_title'] = 'CORAL';
+      $vars['messages'] = leak_get_messages();
     }
     else {
       print_r($request);
@@ -99,22 +100,19 @@ function leak_debug($name, $var) {
 function leak_get_debug_output() {
   global $debug;
   $vars = array('debug' => print_r($debug, TRUE));
-  return leak_template('debug', $vars, 'system');
+  return leak_template('debug', $vars, 'templates/system');
 }
 
 /**
  * Convert some variables to rendered output
  */
-function leak_template($template_name, $variables, $folder = '') {
+function leak_template($template_name, $variables, $folder = 'templates') {
   extract($variables, EXTR_SKIP);
   // Start output buffering
   ob_start();
-  // If a subfolder name is provided add it to the template name
-  if (!empty($folder)) {
-    $template_name  = $folder . '/' . $template_name;
-  }
+
   // Include the template file
-  include 'templates/' . $template_name . '.tpl.php';
+  include $folder . '/' . $template_name . '.tpl.php';
   // End buffering and return its contents
   return ob_get_clean();
 }
@@ -137,7 +135,7 @@ function leak_access_denied() {
   $output = array('page_title' => 'Access Denied');
   global $user;
   if (empty($user['id'])) {
-    $output['content'] = leak_template('login', array(), 'system');
+    $output['content'] = leak_template('login', array(), 'templates/system');
   }
   else {
     $output['content'] = 'You do not have access to this page';
@@ -155,6 +153,30 @@ function leak_goto($path = '') {
 }
 
 
+/** Allow messages to be set that are collected and displayed
+together in the page template **/
+
+/**
+ * Set a message, type should be success or alert
+ */
+function leak_set_message($message, $type = 'alert') {
+  global $messages;
+  $messages[] = array('content' => $message, 'type' => $type);
+}
+
+function leak_get_messages() {
+  $output = '';
+  global $messages;
+  if (!empty($messages)) {
+    foreach ($messages as $message) {
+      $output .= leak_template('message',
+        array('message' => $message['content'],
+          'type' => $message['type']), 'templates/system');
+    }
+  }
+  return leak_template('messages', array('content' => $output),
+    'templates/system');
+}
 
 
 

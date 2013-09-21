@@ -1,5 +1,34 @@
 This folder contains the web front end code.
 
+## Methodology
+
+The public_html folder includes the front end, web accessible code and is
+where nginx points to. There is an index.php file that nginx redirects all
+requests to (that don't match an actual static file).
+
+    coral_bootstrap()
+
+This sets up the DB connection, loads the current user, and parses the
+request.
+
+    coral_execute()
+
+This passes control to the appropriate callback function. Callbacks must
+be enabled in the configuration file config.ini and then exist within the
+controllers folder.
+
+The result of the controller function either passed to the template function
+to create the full HTML page, or encoded as JSON, depending on the selected
+format in the request.
+
+For example:
+
+    http://192.168.33.10/dashboard/show
+
+This shows the dashboard in HTML, but the data can be accessed as JSON using:
+
+   http://192.168.33.10/dashboard/show.json
+
 
 ## Local dev instructions
 
@@ -59,7 +88,7 @@ Then just start or restart the services:
     vagrant@precise32: sudo service php5-fpm restart
     vagrant@precise32: sudo service nginx start
 
-Done!
+Now install MySQL on the vagrant box, create the database and import the test data.
 
 When you've finished developing log out of SSH then either halt or destroy the machine:
 

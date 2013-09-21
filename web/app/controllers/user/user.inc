@@ -19,10 +19,14 @@ function user_logout_execute() {
 }
 
 function user_login_execute() {
-  global $user, $db;
+  global $user, $db, $config;
 
-  $utest = $db->prepare("SELECT * FROM auth_user WHERE password = ? AND username = ?");
-  $utest->execute(array(sha1($_POST['pass']), $_POST['name']));
+  $utest = $db->prepare("SELECT * FROM acl_user
+    WHERE password = ? AND name = ?");
+  $utest->execute(array(
+    sha1($_POST['pass'] . $config['salt']),
+    $_POST['name']
+  ));
   $users = $utest->fetchAll();
 
   if (!empty($users)) {
@@ -31,6 +35,7 @@ function user_login_execute() {
     leak_goto();
   }
   else {
+    leak_set_message('Username or password unknown');
     return leak_access_denied();
   }
 }

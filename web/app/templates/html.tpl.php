@@ -23,6 +23,13 @@
     </div>
   </div>
 
+  <?php if (!empty($messages)): ?>
+    <div class="row">
+      <div class="large-12 columns">
+        <?php print $messages; ?>
+      </div>
+    </div>
+  <?php endif; ?>
 
   <div class="row">
     <div class="large-12 columns">
