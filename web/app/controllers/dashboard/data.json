@@ -1,0 +1,56 @@
+{
+    "date": "18 Sep 2013",
+    "tanks": [
+        {
+            "id": 1,
+            "daylightLampOn": false,
+            "moonlightLampOn": true,
+            "currentTankTemperatureCelcius": 12.3,
+            "targetTankTemperatureCelcius": 13.4,
+            "actualTankTemperatureHistory": [
+                {
+                    "time": 12345678,
+                    "celcius": 12.3
+                },
+                {
+                    "time": 23456789,
+                    "celcius": 11.2
+                }
+            ],
+            "source": {
+                "name": "Fiji",
+                "latitude": 12.88786,
+                "longitude": -89.71364,
+                "sourceTemperatureHistory": [
+                    {
+                        "time": 12345678,
+                        "celcius": 12.3
+                    },
+                    {
+                        "time": 23456789,
+                        "celcius": 11.2
+                    }
+                ],
+                "sourceTime": 123456,
+                "lunarPeriods": [
+                    {
+                        "startTime": 12345678,
+                        "endTime": 12345678,
+                        "fullness": 0.5
+                    },
+                    {
+                        "startTime": 12345678,
+                        "endTime": 12345678,
+                        "fullness": 0.5
+                    }
+                ],
+                "solarPeriods": [
+                    {
+                        "startTime": 12345678,
+                        "fullness": 0.5
+                    }
+                ]
+            }
+        }
+    ]
+}
