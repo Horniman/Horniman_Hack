@@ -3,13 +3,13 @@ from django.db import models
 # Create your models here.
 
 class Tank(models.Model):
-    name = models.CharField()
+    name = models.CharField(max_length=255)
 
 class Profile(models.Model):
     tank = models.ForeignKey(Tank)
 
 class Sensor(models.Model):
-    name = models.CharField()
+    name = models.CharField(max_length=255)
 
 class SensorTempBuoy(models.Model):
     sensor = models.ForeignKey(Sensor)
@@ -38,33 +38,31 @@ class SensorLux(models.Model):
 class Temp(models.Model):
     sensor = models.ForeignKey(Sensor)
     temp = models.FloatField() 
-    time = models.DateTime()
+    time = models.DateTimeField()
 
 class Lux(models.Model):
     sensor = models.ForeignKey(Sensor)
     lux = models.FloatField(Sensor) 
-    time = models.DateTime()
+    time = models.DateTimeField()
     
 class Profile(models.Model):
-    tank = models.ForeignField(Tank)    
-    time = models.DateTime()
+    tank = models.ForeignKey(Tank)    
+    time = models.DateTimeField()
     temp = models.FloatField()
     lux = models.FloatField()
 
 class TankTempParams(models.Model):
-    tank = models.ForeignField(Tank)    
-    sensor = models.ForeignField(Sensor)
+    tank = models.ForeignKey(Tank)    
+    sensor = models.ForeignKey(Sensor)
     time_offset = models.FloatField()
     value_offset = models.FloatField()
-    start_time = models.DateTime()
-    end_time = models.DateTime()
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
 
 class TankLuxParams(models.Model):
-    tank = models.ForeignField(Tank)    
-    sensor = models.ForeignField(Sensor)
+    tank = models.ForeignKey(Tank)    
+    sensor = models.ForeignKey(Sensor)
     time_offset = models.FloatField()
     value_offset = models.FloatField()
-    start_time = models.DateTime()
-    end_time = models.DateTime()
-        
-    
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()

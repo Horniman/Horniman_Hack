@@ -45,7 +45,7 @@ test:
 #`Code coverage report <../../coverage_report/>`_
 #
 code_coverage:
-	./manage.py code_coverage
+	./manage.py test_coverage
 
 #Documentation
 #^^^^^^^^^^^^^
