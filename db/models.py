@@ -26,18 +26,21 @@ class SensorTempBuoy(models.Model):
 class SensorTempTank(models.Model):
     """Calibration and validation for tank based temperiture sensors."""
     sensor = models.ForeignKey(Sensor)
+    llap = models.CharField(max_length=2)
     max_temp = models.FloatField()
     min_temp = models.FloatField()
 
 class SensorTempAmbiant(models.Model):
     """Calibration and validation for other temperiture sensors."""
     sensor = models.ForeignKey(Sensor)
+    llap = models.CharField(max_length=2)
     max_temp = models.FloatField()
     min_temp = models.FloatField()
 
 class SensorLux(models.Model):
     """Calibration and validation for light sensors."""
     sensor = models.ForeignKey(Sensor)
+    llap = models.CharField(max_length=2)
     max_lux = models.FloatField()
     min_lux = models.FloatField()
 
