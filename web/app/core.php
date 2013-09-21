@@ -43,15 +43,17 @@ function coral_bootstrap() {
 function coral_execute() {
   global $request, $user, $config;
 
+  // Include the code for the requested controller
   require_once "controllers/{$request['controller']}/{$request['controller']}.inc";
+
+  // Check the user has access to this controller and operation
   $access_callback = "{$request['controller']}_access";
   if (function_exists($access_callback) && $access_callback($user)) {
+
+    // Pass off control to the controller operation callback
     $callback = "{$request['controller']}_{$request['op']}_execute";
     if (function_exists($callback)) {
       $vars = $callback();
-
-      // Setup some common page variables
-      $vars['messages'] = coral_get_messages();
     }
     else {
       print_r($request);
@@ -61,6 +63,9 @@ function coral_execute() {
   else {
     $vars = coral_access_denied();
   }
+
+  // Setup some common page variables
+  $vars['messages'] = coral_get_messages();
   $vars['logged_in'] = !empty($user['id']);
   if (!isset($vars['page_title'])) {
     $vars['page_title'] = 'CORAL';
