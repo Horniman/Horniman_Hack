@@ -7,8 +7,8 @@ from db import models as db_models
 class LogTempLive(models.Model):
     """Messages from Buoy"""
     sensor = models.ForeignKey(db_models.Sensor)
-    processed = models.BooleanField()
-    data = models.CharField(max_length=50)
+    processed = models.BooleanField(default = False)
+    data = models.CharField(max_length = 48)
     time = models.DateTimeField()
 
 #class LogTempBackup(models.Model):
