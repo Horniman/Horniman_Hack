@@ -55,9 +55,9 @@ You might need to change the root location depending on where you have git
 cloned the code base.`
 Then just start or restart the services:
 
-   vagrant@precise32: sudo service nginx stop
-   vagrant@precise32: sudo service php5-fpm restart
-   vagrant@precise32: sudo service nginx start
+    vagrant@precise32: sudo service nginx stop
+    vagrant@precise32: sudo service php5-fpm restart
+    vagrant@precise32: sudo service nginx start
 
 Done!
 
