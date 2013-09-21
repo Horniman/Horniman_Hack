@@ -13,11 +13,20 @@ function leak_bootstrap() {
   chdir(dirname(realpath(__FILE__)));
   global $config, $request, $db, $user;
 
+  // Enable display of all errors - disable in production
+  ini_set('error_reporting', E_ALL);
+  ini_set('display_errors', 'On');
+
   // Load the configuration
   $config = parse_ini_file('../config.ini');
   leak_debug('config', $config);
 
+  // Connect to the database
+  $db = new PDO("mysql:host={$config['db_host']};dbname={$config['db_name']}",
+    $config['db_user'], $config['db_pass']);
+
   // TODO: Load the current user
+  session_start();
   $user = leak_active_user();
 
   // TODO: Parse the request, here just hard code to test:
@@ -25,8 +34,6 @@ function leak_bootstrap() {
   $request = leak_parse_request();
   leak_debug('request', $request);
 
-  // TODO: Connect to the database
-  // $db =
 }
 
 
@@ -121,6 +128,11 @@ function leak_parse_request() {
     $request['format'] = 'html';
   }
 
+  // Strip any GET parameters
+  if ($remove_get = stristr($path, '?', TRUE)) {
+    $path = $remove_get;
+  }
+
   // Split path
   $path = explode('/', $path);
 
@@ -143,6 +155,8 @@ function leak_parse_request() {
   if (isset($_GET['debug'])) {
     $config['debug'] = TRUE;
   }
+  leak_debug('rS', $_SERVER);
+  leak_debug('rG', $_GET);
   return $request;
 }
 
