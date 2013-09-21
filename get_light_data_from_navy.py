@@ -8,9 +8,9 @@ from sys import argv
 br=mechanize.Browser()
 br.set_handle_robots(False)
 
-#year, month, day, placename, longdegree, longminute, latdegree, latminute, tzoffset = "2013 9 19 london 1 2 52 3 1".split(' ')
-print "USAGE: blah.py yyyy m dd placename LAT lat LONG long TZOFFSET"
-x, year, month, day, placename, longdegree, longminute, latdegree, latminute, tzoffset = argv
+year, month, day, placename, longdegree, longminute, latdegree, latminute, tzoffset = "2013 9 19 london 1 2 52 3 1".split(' ')
+#print "USAGE: blah.py yyyy m dd placename LAT lat LONG long TZOFFSET"
+#x, year, month, day, placename, longdegree, longminute, latdegree, latminute, tzoffset = argv
 
 #FFX=2
 #ID=AA
@@ -58,9 +58,13 @@ sun_transit_re = re.compile("Sun transit               (.*)")
 sunset_time_re = re.compile("Sunset                    (.*)")
 twilight_end_re = re.compile("End civil twilight        (.*)")
 
-moonrise_re = re.compile("Moonrise.*([0-1][0-9]:[0-5][0-9]) [^on]")
+moonrise_re = re.compile("Moonrise.*([0-2][0-9]:[0-5][0-9]) [^on]")
 moon_transit_re = re.compile("Moon transit              (.*)")
 moonset_re = re.compile("Moonset.*([0-1][0-9]:[0-5][0-9]) [^on]")
+
+moon_phase_re = re.compile("Phase of the Moon(.*)")
+moon_disk_re = re.compile("with (.*) of the Moon")
+moon_phase_full_re = re.compile("Full.*Moon on.*at ([0-2][0-9]:[0-5][0-9])")
 
 twilight_start= twilight_start_re.findall(page)[0].strip()
 sunrise_time = sunrise_time_re.findall(page)[0].strip()
@@ -72,8 +76,27 @@ moonrise = moonrise_re.findall(page)[0].strip()
 moon_transit = moon_transit_re.findall(page)[0].strip()
 moonset = moonset_re.findall(page)[0].strip()
 
-print datetime.datetime(int(year), int(month), int(day))
-print twilight_start, sunrise_time, sun_transit, sunset_time, twilight_end
+try:
+  moon_phase = moon_phase_re.findall(page)[0].strip()
+except:
+  #print page
+  moon_phase_full = moon_phase_full_re.findall(page)[0].strip()
+  moon_phase="Full"
 
-print moonrise, moon_transit, moonset
+try:
+  moon_disk = moon_disk_re.findall(page)[0].strip()
+except:
+  #print page
+  moon_phase_full = moon_phase_full_re.findall(page)[0].strip()
+  moon_disk = 100
+  
+#print page
 
+nowx =  datetime.datetime(int(year), int(month), int(day))
+#print twilight_start, sunrise_time, sun_transit, sunset_time, twilight_end
+
+#print moonrise, moon_transit, moonset, moon_phase, moon_disk
+# INSERT INTO `astro`.`navy` (`Date`, `twilight_start`, `sunrise`, `sun_transit`, `sunset_time`, `twilight_end`, `moonrise`, `moon_transit`, `moonset`, `moon_phase`, `moon_disk`) VALUES ('2013-09-01', '09:09:00', '09:18:00', '12:00:00', '17:01:00', '18:00:00', '18:00:00', '23:59:00', '05:00:00', 'full', '100');
+
+
+print "INSERT INTO `astro`.`navy` (`Date`, `twilight_start`, `sunrise`, `sun_transit`, `sunset_time`, `twilight_end`, `moonrise`, `moon_transit`, `moonset`, `moon_phase`, `moon_disk`) VALUES ('%s', '%s:00', '%s:00', '%s:00', '%s:00', '%s:00', '%s:00', '%s:00', '%s:00', '%s', '%s');" % (nowx, twilight_start, sunrise_time, sun_transit, sunset_time, twilight_end, moonrise, moon_transit, moonset, moon_phase, moon_disk)
