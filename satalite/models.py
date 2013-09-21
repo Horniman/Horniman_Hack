@@ -1,6 +1,12 @@
 from django.db import models
 
-class LogSatalite(models.Model):
+class LogTempLive(models.Model):
+    sensor = models.ForeignKey(Sensor)
+    processed = models.BooleanField()
+    data = models.CharField(maxlength=50)
+    time = models.DateTimeField()
+
+class LogTempBackup(models.Model):
     sensor = models.ForeignKey(Sensor)
     byyy = models.CharField(maxlength=4)
     bm =models.CharField(maxlength=2)
