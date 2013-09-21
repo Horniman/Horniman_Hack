@@ -50,10 +50,11 @@ void setup() {
   
   //Configure ADC
   setupADC();
+
 }
 
 int inbyte=0;
-int incommand[12] = {};
+unsigned char incommand[12] = {};
 int incount=0;
 int outbyte=0;
 
@@ -71,6 +72,7 @@ void loop() {
       processcommand();
     }
   }
+
 }
 
 void processcommand() {
