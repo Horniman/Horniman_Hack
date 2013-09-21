@@ -51,7 +51,8 @@ function leak_execute() {
       $vars = $callback();
 
       // Setup some common page variables
-      $vars['page_title'] = 'LEAK';
+      $vars['page_title'] = 'CORAL';
+      $vars['messages'] = leak_get_messages();
     }
     else {
       print_r($request);
@@ -152,6 +153,30 @@ function leak_goto($path = '') {
 }
 
 
+/** Allow messages to be set that are collected and displayed
+together in the page template **/
+
+/**
+ * Set a message, type should be success or alert
+ */
+function leak_set_message($message, $type = 'alert') {
+  global $messages;
+  $messages[] = array('content' => $message, 'type' => $type);
+}
+
+function leak_get_messages() {
+  $output = '';
+  global $messages;
+  if (!empty($messages)) {
+    foreach ($messages as $message) {
+      $output .= leak_template('message',
+        array('message' => $message['content'],
+          'type' => $message['type']), 'templates/system');
+    }
+  }
+  return leak_template('messages', array('content' => $output),
+    'templates/system');
+}
 
 
 
