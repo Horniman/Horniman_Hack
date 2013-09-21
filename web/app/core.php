@@ -30,7 +30,7 @@ function leak_bootstrap() {
   $user = leak_active_user();
   leak_debug('user', $user);
 
-  // TODO: check controller and op are in the allowed values
+  require 'system/request.inc';
   $request = leak_parse_request();
   leak_debug('request', $request);
 
@@ -43,7 +43,7 @@ function leak_bootstrap() {
 function leak_execute() {
   global $request, $user, $config;
 
-  require_once "{$request['controller']}/{$request['controller']}.inc";
+  require_once "controllers/{$request['controller']}/{$request['controller']}.inc";
   $access_callback = "{$request['controller']}_access";
   if (function_exists($access_callback) && $access_callback($user)) {
     $callback = "{$request['controller']}_{$request['op']}_execute";
