@@ -1,10 +1,16 @@
 import requests
 import mechanize
+import re
+import datetime
+from sys import argv
+
 
 br=mechanize.Browser()
 br.set_handle_robots(False)
 
-year, month, day, placename, longdegree, longminute, latdegree, latminute, tzoffset = "2013 9 19 london 1 2 52 3 1".split(' ')
+#year, month, day, placename, longdegree, longminute, latdegree, latminute, tzoffset = "2013 9 19 london 1 2 52 3 1".split(' ')
+print "USAGE: blah.py yyyy m dd placename LAT lat LONG long TZOFFSET"
+x, year, month, day, placename, longdegree, longminute, latdegree, latminute, tzoffset = argv
 
 #FFX=2
 #ID=AA
@@ -25,7 +31,6 @@ year, month, day, placename, longdegree, longminute, latdegree, latminute, tzoff
 br.open("http://aa.usno.navy.mil/data/docs/RS_OneDay.php")
 br.select_form(nr=2)
 
-print br.form
 
 #br['FFX'] = '2'
 #br['ID'] = 'AA'
@@ -45,8 +50,30 @@ br['zz1'] = tzoffset
 
 r=br.submit()
 
-#r=requests.post('http://aa.usno.navy.mil/cgi-bin/aa_pap.pl', f)
-print dir(r)
-print r.read()
-#print r.request
-#print r.text
+page= r.read()
+
+twilight_start_re = re.compile("Begin civil twilight      (.*)")
+sunrise_time_re = re.compile("Sunrise                   (.*)")
+sun_transit_re = re.compile("Sun transit               (.*)")
+sunset_time_re = re.compile("Sunset                    (.*)")
+twilight_end_re = re.compile("End civil twilight        (.*)")
+
+moonrise_re = re.compile("Moonrise.*([0-1][0-9]:[0-5][0-9]) [^on]")
+moon_transit_re = re.compile("Moon transit              (.*)")
+moonset_re = re.compile("Moonset.*([0-1][0-9]:[0-5][0-9]) [^on]")
+
+twilight_start= twilight_start_re.findall(page)[0].strip()
+sunrise_time = sunrise_time_re.findall(page)[0].strip()
+sun_transit = sun_transit_re.findall(page)[0].strip()
+sunset_time = sunset_time_re.findall(page)[0].strip()
+twilight_end = twilight_end_re.findall(page)[0].strip()
+
+moonrise = moonrise_re.findall(page)[0].strip()
+moon_transit = moon_transit_re.findall(page)[0].strip()
+moonset = moonset_re.findall(page)[0].strip()
+
+print datetime.datetime(int(year), int(month), int(day))
+print twilight_start, sunrise_time, sun_transit, sunset_time, twilight_end
+
+print moonrise, moon_transit, moonset
+
