@@ -93,6 +93,14 @@ function coral_execute() {
   }
 }
 
+/******* LINK HELPERS ********/
+
+/**
+ * Helper function to generate internal links
+ */
+function l($title, $path) {
+  return '<a href="' . coral_path($path) . '">' . $title . '</a>';
+}
 /**
  * Function to calculate a path
  */
@@ -107,22 +115,16 @@ function coral_path($path = '/') {
   return $path;
 }
 
-/**
- * Function to generate an internal link
- */
-function l($title, $path) {
-  return '<a href="' . coral_path($path) . '">' . $title . '</a>';
-}
 
+/******* DEBUGGING HELPERS *********/
 
 /**
- * Add data to the debug output
+ * Function used to add data to the debug output
  */
 function coral_debug($name, $var) {
   global $debug;
   $debug[$name] = $var;
 }
-
 /**
  * Function to get all debug output
  */
@@ -131,6 +133,9 @@ function coral_get_debug_output() {
   $vars = array('debug' => print_r($debug, TRUE));
   return coral_template('debug', $vars, 'templates/system');
 }
+
+
+/********* RENDER CONTENT USING TEMPLATE ************/
 
 /**
  * Convert some variables to rendered output
@@ -158,7 +163,6 @@ function coral_active_user() {
   }
   return $user;
 }
-
 
 function coral_access_denied() {
   global $user;
