@@ -14,7 +14,7 @@ function dashboard_show_execute() {
   }
 
   $vars = array('content' => $data);
-  $content = leak_template('dashboard', $vars, 'controllers/dashboard');
+  $content = coral_template('dashboard', $vars, 'controllers/dashboard');
   return array(
     'page_title' => 'Dashboard',
     'content' => $content,

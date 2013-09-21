@@ -15,7 +15,7 @@ function user_access($user) {
 
 function user_logout_execute() {
   session_destroy();
-  leak_goto();
+  coral_goto();
 }
 
 function user_login_execute() {
@@ -32,11 +32,11 @@ function user_login_execute() {
   if (!empty($users)) {
     $user = $users[0];
     $_SESSION['user'] = $user;
-    leak_goto();
+    coral_goto();
   }
   else {
-    leak_set_message('Username or password unknown');
-    return leak_access_denied();
+    coral_set_message('Username or password unknown');
+    return coral_access_denied();
   }
 }
 

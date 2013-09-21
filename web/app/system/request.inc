@@ -11,7 +11,7 @@
  * @return an array containing the controller, operation
  * request method and format
  */
-function leak_parse_request() {
+function coral_parse_request() {
   global $config;
   $request = array();
 

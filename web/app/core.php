@@ -19,7 +19,7 @@ function coral_bootstrap() {
 
   // Load the configuration
   $config = parse_ini_file('../config.ini');
-  leak_debug('config', $config);
+  coral_debug('config', $config);
 
   // Connect to the database
   $db = new PDO("mysql:host={$config['db_host']};dbname={$config['db_name']}",
@@ -27,12 +27,12 @@ function coral_bootstrap() {
 
   // TODO: Load the current user
   session_start();
-  $user = leak_active_user();
-  leak_debug('user', $user);
+  $user = coral_active_user();
+  coral_debug('user', $user);
 
   require 'system/request.inc';
-  $request = leak_parse_request();
-  leak_debug('request', $request);
+  $request = coral_parse_request();
+  coral_debug('request', $request);
 
 }
 
@@ -43,36 +43,43 @@ function coral_bootstrap() {
 function coral_execute() {
   global $request, $user, $config;
 
+  // Include the code for the requested controller
   require_once "controllers/{$request['controller']}/{$request['controller']}.inc";
+
+  // Check the user has access to this controller and operation
   $access_callback = "{$request['controller']}_access";
   if (function_exists($access_callback) && $access_callback($user)) {
+
+    // Pass off control to the controller operation callback
     $callback = "{$request['controller']}_{$request['op']}_execute";
     if (function_exists($callback)) {
       $vars = $callback();
-
-      // Setup some common page variables
-      $vars['page_title'] = 'CORAL';
-      $vars['messages'] = leak_get_messages();
     }
     else {
       print_r($request);
-      $vars = leak_error();
+      $vars = coral_error();
     }
   }
   else {
-    $vars = leak_access_denied();
+    $vars = coral_access_denied();
   }
+
+  // Setup some common page variables
+  $vars['messages'] = coral_get_messages();
   $vars['logged_in'] = !empty($user['id']);
+  if (!isset($vars['page_title'])) {
+    $vars['page_title'] = 'CORAL';
+  }
 
   // If debugging is enabled add to page variables
   if ($config['debug']) {
-    $vars['debug'] = leak_get_debug_output();
+    $vars['debug'] = coral_get_debug_output();
   }
 
   // Format output depending on requested format
   switch ($request['format']) {
     case 'html':
-      echo leak_template('html', $vars);
+      echo coral_template('html', $vars);
       break;
     case 'json':
       header('Content-Type: application/json');
@@ -86,27 +93,54 @@ function coral_execute() {
   }
 }
 
+/******* LINK HELPERS ********/
+
 /**
- * Add data to the debug output
+ * Helper function to generate internal links
  */
-function leak_debug($name, $var) {
+function l($title, $path) {
+  return '<a href="' . coral_path($path) . '">' . $title . '</a>';
+}
+/**
+ * Function to calculate a path
+ */
+function coral_path($path = '/') {
+  global $config;
+  if (isset($config['base_path'])) {
+    return $config['base_path'] . $path;
+  }
+  if (substr($path, 1, 1) != '/') {
+    return '/' . $path;
+  }
+  return $path;
+}
+
+
+/******* DEBUGGING HELPERS *********/
+
+/**
+ * Function used to add data to the debug output
+ */
+function coral_debug($name, $var) {
   global $debug;
   $debug[$name] = $var;
 }
-
 /**
  * Function to get all debug output
  */
-function leak_get_debug_output() {
+function coral_get_debug_output() {
   global $debug;
   $vars = array('debug' => print_r($debug, TRUE));
-  return leak_template('debug', $vars, 'templates/system');
+  return coral_template('debug', $vars, 'templates/system');
 }
+
+
+/********* RENDER CONTENT USING TEMPLATE ************/
 
 /**
  * Convert some variables to rendered output
  */
-function leak_template($template_name, $variables, $folder = 'templates') {
+function coral_template($template_name, $variables, $folder = 'templates') {
   extract($variables, EXTR_SKIP);
   // Start output buffering
   ob_start();
@@ -118,7 +152,7 @@ function leak_template($template_name, $variables, $folder = 'templates') {
 }
 
 
-function leak_active_user() {
+function coral_active_user() {
   if (!empty($_SESSION['user'])) {
     $user = $_SESSION['user'];
   }
@@ -130,12 +164,11 @@ function leak_active_user() {
   return $user;
 }
 
-
-function leak_access_denied() {
-  $output = array('page_title' => 'Access Denied');
+function coral_access_denied() {
   global $user;
   if (empty($user['id'])) {
-    $output['content'] = leak_template('login', array(), 'templates/system');
+    coral_set_message('You do not have access to this page', 'alert');
+    $output['content'] = coral_template('login', array(), 'templates/system');
   }
   else {
     $output['content'] = 'You do not have access to this page';
@@ -143,7 +176,7 @@ function leak_access_denied() {
   return $output;
 }
 
-function leak_goto($path = '') {
+function coral_goto($path = '') {
   if ($path == '') {
     header('Location: /');
   }
@@ -159,22 +192,22 @@ together in the page template **/
 /**
  * Set a message, type should be success or alert
  */
-function leak_set_message($message, $type = 'alert') {
+function coral_set_message($message, $type = 'alert') {
   global $messages;
   $messages[] = array('content' => $message, 'type' => $type);
 }
 
-function leak_get_messages() {
+function coral_get_messages() {
   $output = '';
   global $messages;
   if (!empty($messages)) {
     foreach ($messages as $message) {
-      $output .= leak_template('message',
+      $output .= coral_template('message',
         array('message' => $message['content'],
           'type' => $message['type']), 'templates/system');
     }
   }
-  return leak_template('messages', array('content' => $output),
+  return coral_template('messages', array('content' => $output),
     'templates/system');
 }
 
