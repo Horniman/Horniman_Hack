@@ -77,3 +77,9 @@ class TankLuxParams(models.Model):
     value_offset = models.FloatField()
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
+
+class Moonlight(models.Model):
+    """Moonline observations"""
+    rise = models.DateTimeField()
+    set = models.TimeField()
+    percent = models.FloatField()
