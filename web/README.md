@@ -26,8 +26,8 @@ Launch the machine and SSH in:
 
 Then install nginx and PHP-FPM:
 
-    sudo apt-get update
-    sudo apt-get install nginx php5-fpm
+    vagrant@precise32: sudo apt-get update
+    vagrant@precise32: sudo apt-get install nginx php5-fpm
 
 Then edit the Nginx configuration file found at
 /etc/nginx/sites-enabled/default
@@ -55,13 +55,13 @@ You might need to change the root location depending on where you have git
 cloned the code base.`
 Then just start or restart the services:
 
-   sudo service nginx stop
-   sudo service php5-fpm restart
-   sudo service nginx start
+   vagrant@precise32: sudo service nginx stop
+   vagrant@precise32: sudo service php5-fpm restart
+   vagrant@precise32: sudo service nginx start
 
 Done!
 
-When you've finished developing you can either halt or destroy the machine:
+When you've finished developing log out of SSH then either halt or destroy the machine:
 
     vagrant halt
 
