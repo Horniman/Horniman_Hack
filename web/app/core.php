@@ -22,11 +22,8 @@ function leak_bootstrap() {
 
   // TODO: Parse the request, here just hard code to test:
   // TODO: check controller and op are in the allowed values
-  $request = array(
-    'controller' => 'test',
-    'op' => 'show',
-    'format' => 'html',
-  );
+  $request = leak_parse_request();
+  leak_debug('request', $request);
 
   // TODO: Connect to the database
   // $db =
@@ -107,6 +104,49 @@ function leak_template($template_name, $variables, $folder = '') {
   return ob_get_clean();
 }
 
+
+function leak_parse_request() {
+  global $config;
+  $request = array();
+
+  $path = $_SERVER['REQUEST_URI'];
+
+  // Strip of format if requested
+  $path_info = pathinfo($path);
+  if (!empty($path_info['extension'])) {
+    $request['format'] = $path_info['extension'];
+    $path = substr($path, 0, strlen($path) - strlen($path_info['extension']));
+  }
+  else {
+    $request['format'] = 'html';
+  }
+
+  // Split path
+  $path = explode('/', $path);
+
+  // Extract controller and operation
+  if (empty($path[1])) {
+    $request['controller'] = $config['default_controller'];
+  }
+  else {
+    $request['controller'] = $path[1];
+  }
+
+  if (empty($path[2])) {
+    $request['op'] = $config['default_op'];
+  }
+  else {
+    $request['op'] = $path[2];
+  }
+
+  // Is debug mode requested?
+  if (isset($_GET['debug'])) {
+    $config['debug'] = TRUE;
+  }
+  return $request;
+}
+
+
 function leak_active_user() {
   $user = array(
     'uid' => 0,
@@ -116,10 +156,15 @@ function leak_active_user() {
 
 
 function leak_access_denied() {
-  return array(
-    'page_title' => 'Access Denied',
-    'content' => 'Access Denied',
-  );
+  $output = array('page_title' => 'Access Denied');
+  global $user;
+  if (empty($user['uid'])) {
+    $output['content'] = leak_template('login', array(), 'system');
+  }
+  else {
+    $output['content'] = 'You do not have access to this page';
+  }
+  return $output;
 }
 
 
