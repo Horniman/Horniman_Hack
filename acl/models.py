@@ -10,23 +10,23 @@ class User(models.Model):
     name = models.CharField(max_length=255)
     password = models.CharField(max_length=128)
     mail = models.CharField(max_length=255)
-    access = models.IntField()
-    status = models.IntField()
+    access = models.IntegerField()
+    status = models.IntegerField()
     data = models.CharField(max_length=255)
 
-class UserRoles(model.Model):
-    user = models.ForiegnKey(User)
-    rid = models.IntField()
+class UserRoles(models.Model):
+    user = models.ForeignKey(User)
+    rid = models.IntegerField()
 
-class Observations(model.Model):
-    user = models.ForiegnKey(User)
+class Observations(models.Model):
+    user = models.ForeignKey(User)
     subject = models.CharField(max_length=255)
     text = models.TextField()
     time = models.DateTimeField()
     reminder = models.DateTimeField()
         
-class ObservationImages(model.Model):
-    observation = models.ForiegnKey(Observations)
+class ObservationImages(models.Model):
+    observation = models.ForeignKey(Observations)
     subject = models.CharField(max_length=255)
     text = models.TextField()
-    file = models.FileField()
+    file = models.CharField(max_length=255)
