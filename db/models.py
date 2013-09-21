@@ -1,17 +1,20 @@
+"""
+Generic tables
+"""
+from __future__ import division, absolute_import, print_function, unicode_literals
+
 from django.db import models
 
-# Create your models here.
-
 class Tank(models.Model):
+    """Seperate control zones"""
     name = models.CharField(max_length=255)
 
-class Profile(models.Model):
-    tank = models.ForeignKey(Tank)
-
 class Sensor(models.Model):
+    """Each data source"""
     name = models.CharField(max_length=255)
 
 class SensorTempBuoy(models.Model):
+    """Calibration and validtion data for check data from Buoy based temperiture sensors"""
     sensor = models.ForeignKey(Sensor)
     target_lat = models.FloatField()
     target_lon = models.FloatField()
@@ -21,38 +24,45 @@ class SensorTempBuoy(models.Model):
     #TODO: Cal and val data
 
 class SensorTempTank(models.Model):
+    """Calibration and validation for tank based temperiture sensors."""
     sensor = models.ForeignKey(Sensor)
     max_temp = models.FloatField()
     min_temp = models.FloatField()
 
 class SensorTempAmbiant(models.Model):
+    """Calibration and validation for other temperiture sensors."""
     sensor = models.ForeignKey(Sensor)
     max_temp = models.FloatField()
     min_temp = models.FloatField()
 
 class SensorLux(models.Model):
+    """Calibration and validation for light sensors."""
     sensor = models.ForeignKey(Sensor)
     max_lux = models.FloatField()
     min_lux = models.FloatField()
 
 class Temp(models.Model):
+    """Log of valid temperature readings"""
     sensor = models.ForeignKey(Sensor)
-    temp = models.FloatField() 
+    temp = models.FloatField()
     time = models.DateTimeField()
 
 class Lux(models.Model):
+    """Log of valid light readings"""
     sensor = models.ForeignKey(Sensor)
-    lux = models.FloatField(Sensor) 
+    lux = models.FloatField(Sensor)
     time = models.DateTimeField()
     
 class Profile(models.Model):
-    tank = models.ForeignKey(Tank)    
+    """The model temperitrue and lux that each tank is following"""
+    tank = models.ForeignKey(Tank)
     time = models.DateTimeField()
     temp = models.FloatField()
     lux = models.FloatField()
 
 class TankTempParams(models.Model):
-    tank = models.ForeignKey(Tank)    
+    """Parameters to build the Profile model for each tank"""
+    tank = models.ForeignKey(Tank)
     sensor = models.ForeignKey(Sensor)
     time_offset = models.FloatField()
     value_offset = models.FloatField()
@@ -60,7 +70,8 @@ class TankTempParams(models.Model):
     end_time = models.DateTimeField()
 
 class TankLuxParams(models.Model):
-    tank = models.ForeignKey(Tank)    
+    """Parameters to build the light model for each Profile"""
+    tank = models.ForeignKey(Tank)
     sensor = models.ForeignKey(Sensor)
     time_offset = models.FloatField()
     value_offset = models.FloatField()

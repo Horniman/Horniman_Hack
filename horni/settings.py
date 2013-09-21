@@ -1,10 +1,11 @@
-# Django settings for horni project.
+"""Settings"""
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    ('Gary Fletcher', 'garygfletcher@hotmail.com'),
 )
 
 MANAGERS = ADMINS

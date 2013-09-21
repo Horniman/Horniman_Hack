@@ -20,10 +20,10 @@ all: code_coverage htmllint doc lint
 #`Code style report <../../pylint.html>`_
 #
 lint:
-	-(cd ..;bin/pylint --rcfile=horni/.pylintrc -f colorized -r n horni)
+	-(cd ..;PYTHONPATH=horni bin/pylint --rcfile=horni/.pylintrc -f colorized -r n horni)
 
 htmllint:
-	-(cd ..;bin/pylint --rcfile=horni/.pylintrc -f html horni) > static/pylint.html
+	-(cd ..;PYTHONPATH=horni bin/pylint --rcfile=horni/.pylintrc -f html horni) > static/pylint.html
 
 #Tests
 #^^^^^
