@@ -59,7 +59,7 @@ Then just start or restart the services:
     vagrant@precise32: sudo service php5-fpm restart
     vagrant@precise32: sudo service nginx start
 
-Done!
+Now install MySQL on the vagrant box, create the database and import the test data.
 
 When you've finished developing log out of SSH then either halt or destroy the machine:
 
