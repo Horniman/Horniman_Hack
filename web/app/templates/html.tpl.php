@@ -18,6 +18,7 @@
       <ul class="inline-list">
         <li><?php print l('Dashboard', ''); ?></li>
         <?php if ($logged_in): ?>
+          <li><?php print l('Observations', 'observations/list'); ?></li>
           <li><?php print l('Logout', 'user/logout'); ?></li>
         <?php endif; ?>
       </ul>

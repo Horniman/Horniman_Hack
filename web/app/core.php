@@ -98,8 +98,14 @@ function coral_execute() {
 /**
  * Helper function to generate internal links
  */
-function l($title, $path) {
-  return '<a href="' . coral_path($path) . '">' . $title . '</a>';
+function l($title, $path, $attributes = array()) {
+  $attr = '';
+  if (!empty($attributes)) {
+    foreach ($attributes as $name => $value) {
+      $attr .= ' ' . $name . '="' . $value . '"';
+    }
+  }
+  return '<a href="' . coral_path($path) . '"' . $attr . '>' . $title . '</a>';
 }
 /**
  * Function to calculate a path
@@ -115,6 +121,10 @@ function coral_path($path = '/') {
   return $path;
 }
 
+
+function coral_error() {
+  return array('content' => 'Something has gone wrong!');
+}
 
 /******* DEBUGGING HELPERS *********/
 
