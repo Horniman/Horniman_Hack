@@ -4,7 +4,7 @@
 require '../app/core.php';
 
 // Bootstrap (i.e. connect DB etc)
-leak_bootstrap();
+coral_bootstrap();
 
 // Process the request
-leak_execute();
+coral_execute();

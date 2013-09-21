@@ -9,7 +9,7 @@
 /**
  * Bootstrap the system
  */
-function leak_bootstrap() {
+function coral_bootstrap() {
   chdir(dirname(realpath(__FILE__)));
   global $config, $request, $db, $user;
 
@@ -40,7 +40,7 @@ function leak_bootstrap() {
 /**
  * Execute the current request
  */
-function leak_execute() {
+function coral_execute() {
   global $request, $user, $config;
 
   require_once "controllers/{$request['controller']}/{$request['controller']}.inc";
