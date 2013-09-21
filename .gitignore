@@ -2,4 +2,4 @@ static/*
 **.py[oc]
 doc/_build
 .idea
-
+web/config.ini
