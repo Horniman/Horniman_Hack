@@ -28,8 +28,8 @@ function leak_bootstrap() {
   // TODO: Load the current user
   session_start();
   $user = leak_active_user();
+  leak_debug('user', $user);
 
-  // TODO: Parse the request, here just hard code to test:
   // TODO: check controller and op are in the allowed values
   $request = leak_parse_request();
   leak_debug('request', $request);
@@ -54,12 +54,14 @@ function leak_execute() {
       $vars['page_title'] = 'LEAK';
     }
     else {
+      print_r($request);
       $vars = leak_error();
     }
   }
   else {
     $vars = leak_access_denied();
   }
+  $vars['logged_in'] = !empty($user['id']);
 
   // If debugging is enabled add to page variables
   if ($config['debug']) {
@@ -72,7 +74,13 @@ function leak_execute() {
       echo leak_template('html', $vars);
       break;
     case 'json':
-      echo json_encode($vars);
+      header('Content-Type: application/json');
+      if (is_array($vars['content'])) {
+        echo json_encode($vars['content']);
+      }
+      else {
+        echo json_encode($vars);
+      }
       break;
   }
 }
@@ -122,7 +130,7 @@ function leak_parse_request() {
   $path_info = pathinfo($path);
   if (!empty($path_info['extension'])) {
     $request['format'] = $path_info['extension'];
-    $path = substr($path, 0, strlen($path) - strlen($path_info['extension']));
+    $path = substr($path, 0, strlen($path) - strlen($path_info['extension']) - 1);
   }
   else {
     $request['format'] = 'html';
@@ -162,9 +170,14 @@ function leak_parse_request() {
 
 
 function leak_active_user() {
-  $user = array(
-    'uid' => 0,
-  );
+  if (!empty($_SESSION['user'])) {
+    $user = $_SESSION['user'];
+  }
+  else {
+    $user = array(
+      'id' => 0,
+    );
+  }
   return $user;
 }
 
@@ -172,7 +185,7 @@ function leak_active_user() {
 function leak_access_denied() {
   $output = array('page_title' => 'Access Denied');
   global $user;
-  if (empty($user['uid'])) {
+  if (empty($user['id'])) {
     $output['content'] = leak_template('login', array(), 'system');
   }
   else {
@@ -180,5 +193,20 @@ function leak_access_denied() {
   }
   return $output;
 }
+
+function leak_goto($path = '') {
+  if ($path == '') {
+    header('Location: /');
+  }
+  else {
+    header('Location: ' . $path);
+  }
+}
+
+
+
+
+
+
 
 

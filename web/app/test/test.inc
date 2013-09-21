@@ -1,7 +1,7 @@
 <?php
 
 function test_access($user) {
-  return !empty($user['uid']);
+  return !empty($user['id']);
 }
 
 function test_show_execute() {
